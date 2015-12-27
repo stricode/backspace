@@ -1,5 +1,5 @@
 var editor = document.getElementById('editor');
-var languages = ["english", "urdu"];
+var languages = ["english"];
 var kb = new Keyboard(editor, true, languages);
 kb.Hide();
 
