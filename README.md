@@ -1,6 +1,8 @@
 # backspace
 Backspace.js - A simple, lightweight and customizable keyboard.
 
+[Visit Homepage](https://stricode.github.io/backspace)
+
 **Backspace is a JavaScript library for integrating virtual (on screen) keyboard to your applications.**
 
 **Features:**
