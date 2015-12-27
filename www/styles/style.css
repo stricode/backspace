@@ -1,0 +1,69 @@
+body {
+  padding-top: 50px;
+  color: black;
+}
+
+.hero {
+  background-color: #F0DB4F;
+  padding: 40px 15px;
+  text-align: center;
+  margin: 0;
+}
+
+.demo { 
+    background-color: #F0DB4F;
+    margin-bottom: 56px;
+    color: black;
+}
+
+#editor {
+    outline:  0;
+    overflow: auto;
+    font-size: 18px;
+    max-height: 100px;
+    margin-bottom: 16px;
+}
+
+.btn-black {
+    border: 0;
+    background-color: black;
+    color: #F0DB4F;
+}
+
+.link-black {
+    font-weight: bold;
+    font-size: 16px;
+    color: black;
+}
+
+footer  {
+    margin-top: 56px;
+    margin-bottom: 56px;
+}
+
+.text-small {
+    font-size: 12px;
+}
+
+.note {
+    margin-top: 4px;
+    font-size: 11px;
+    visibility: hidden;
+}
+
+@media(min-width: 768px) {
+    
+.kb-base {
+    width: 50% !important;
+    margin-left: 25% !important;
+}
+
+.kb-key {
+    font-size: 20px !important;
+}
+
+.note {
+    visibility: visible;
+}
+
+}

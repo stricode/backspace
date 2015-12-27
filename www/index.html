@@ -1,0 +1,87 @@
+<html>
+
+<head>
+    <title>BackspaceJS - A simple, lightweight and customizable keyboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../lib/backspace-min.css">
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+                aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Backspace.js</a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="#started">Get Started</a></li>
+                    <li><a href="#docs">Docs</a></li>
+                    <li><a href="#api">API</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="jumbotron hero">
+        <div class="container">
+            <h1>Backspace.js</h1>
+            <p>A simple, lightweight and customizable keyboard.</p>
+            <p><a class="btn btn-default btn-lg btn-black" href="#" role="button">Get Started &raquo;</a></p>
+            <p><a class="link-black" href="https://github.com/stricode/backspace/">View on GitHub</a>
+        </div>
+    </div>
+
+    <div class="demo">
+        <div class="container">
+            <div id="editor" contenteditable="true">Type here!</div>
+            <button id="toggleButton" class="btn btn-default btn-black">View Keyboard</button>
+            <p class="note">Note: Custom margins have been applied for this demo on large screens. View on mobile for full-view.</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h2>Simple</h2>
+                <p>Made with plain CSS styling using table display styles and viewport based sizing, the keyboard automatically
+                    adjusts to best view for both mobiles and tablets.</p>
+
+            </div>
+            <div class="col-md-4">
+                <h2>Light-weight</h2>
+                <p>BackspaceJS has no dependencies. Made with TypeScript and minified using Gulp. The whole library weighs only
+                    ~7 kilobytes in production.</p>
+            </div>
+            <div class="col-md-4">
+                <h2>Customizable</h2>
+                <p>
+                    You can customize the styling using custom styles in keymap, language and key mappings, fonts, and anything you want with
+                    custom keymaps.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <p class="text-muted text-small">&copy; 2015 Stricode Mobile. Licensed under <a href="LICENSE">The MIT License.</a></p>
+        </div>
+    </footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="../lib/backspace-min.js"></script>
+    <script src="../lib/backspace.urdu-min.js"></script>
+    <script src="scripts/main.js"></script>
+</body>
+
+</html>
