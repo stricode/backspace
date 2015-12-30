@@ -1,22 +1,25 @@
 {
-    "name": "backspace",
-    "version": "1.0.0",
-    "description": "A simple, lightweight and customizable keyboard",
-    "scripts": {
-        "start": "gulp"
-    },
-    "keywords": [
-        "keyboard",
-        "onscreen",
-        "touch",
-        "virtual"
-    ],
-    "author": "Stricode Mobile",
-    "license": "MIT",
-    "devDependencies": {
-        "gulp": "^3.9.0",
-        "gulp-minify-css": "^1.2.2",
-        "gulp-minify": "^0.0.5",
-        "gulp-rename": "^1.2.2"
-    }
+  "name": "backspace",
+  "version": "1.0.0",
+  "description": "A simple, lightweight and customizable keyboard",
+  "scripts": {
+    "start": "gulp"
+  },
+  "keywords": [
+    "keyboard",
+    "onscreen",
+    "touch",
+    "virtual"
+  ],
+  "author": "Stricode Mobile",
+  "license": "MIT",
+  "devDependencies": {
+    "del": "^2.2.0",
+    "gulp": "^3.9.0",
+    "gulp-minify": "^0.0.5",
+    "gulp-minify-css": "^1.2.2",
+    "gulp-prompt": "^0.1.2",
+    "gulp-rename": "^1.2.2",
+    "vinyl-paths": "^2.1.0"
+  }
 }

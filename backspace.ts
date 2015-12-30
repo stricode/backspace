@@ -21,6 +21,8 @@ class Keyboard {
     private _keyMap: any;
     private _isUpperCase: boolean;
     private _isNumberPad: boolean;
+    private _isKeyPressed: boolean;
+    private _pressedHandle: number;
     private _languageIndex: number;
     private _languages: string[];
 
@@ -140,6 +142,9 @@ class Keyboard {
                 break;
             default:
                 this._insertAtCursor(key, true, null);
+                if (this._isUpperCase) {
+                    this.SwitchCase();
+                }
                 break;
         }
     }
@@ -194,6 +199,18 @@ class Keyboard {
         }
     }
 
+    private _setPressedInterval(initialTimeout: number, handlerAttr: string) {
+        var timeout = initialTimeout;
+        clearInterval(this._pressedHandle);
+        this._pressedHandle = setInterval(() => {
+            if (this._isKeyPressed) {
+                timeout = Math.min(Math.abs(timeout - 50), 100);
+                this._handleKey(handlerAttr);
+                this._setPressedInterval(timeout, handlerAttr);
+            }
+        }, timeout);
+    }
+
     constructor(editorElement: Element, isContentEditable: boolean, languageList: string[]) {
         var baseElement = document.createElement("div");
         baseElement.id = "kb-base";
@@ -212,9 +229,19 @@ class Keyboard {
                 if (ev.type == "touchstart" || ev.type == "mousedown") {
                     ev.preventDefault();
                     el.classList.add("kb-pressed");
+                    var handlerAttr = el.getAttribute("data-handler");
+                    if (handlerAttr && handlerAttr == "backspace") {
+                        this._isKeyPressed = true;
+                        this._setPressedInterval(300, handlerAttr);
+                    }
                 }
                 else if (ev.type == "touchend" || ev.type == "mouseup") {
                     el.classList.remove("kb-pressed");
+                    if (this._isKeyPressed) {
+                        clearInterval(this._pressedHandle);
+                        this._isKeyPressed = false;
+                        this._pressedHandle = null;
+                    }
                     var attr = el.getAttribute("data-handler");
                     var args = (attr ? attr : el.innerText);
                     this._handleKey(args);
