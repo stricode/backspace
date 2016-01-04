@@ -51,7 +51,7 @@ footer  {
     visibility: hidden;
 }
 
-@media(min-width: 768px) {
+@media(min-width: 1281px) {
     
 .kb-base {
     width: 50% !important;

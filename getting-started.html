@@ -25,7 +25,6 @@
     <meta name="theme-color" content="#222222">
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-    <link rel="stylesheet" href="vendor/backspace-min.css">
     <link rel="stylesheet" href="styles/style.css">
 </head>
 
@@ -40,11 +39,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Backspace.js</a>
+                <a class="navbar-brand" href="index.html">Backspace.js</a>
             </div>
             <div id="navbar" class="collapse navbar-collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="getting-started.html">Get Started</a></li>
+                    <li><a href="#">Get Started</a></li>
                     <li><a href="docs.html">Docs</a></li>
                     <li><a href="api.html">API</a></li>
                 </ul>
@@ -54,39 +53,68 @@
 
     <div class="jumbotron hero">
         <div class="container">
-            <h1>Backspace.js</h1>
-            <p>A simple, lightweight and customizable keyboard.</p>
-            <p><a class="btn btn-default btn-lg btn-black" href="getting-started.html" role="button">Get Started &raquo;</a></p>
-            <p><a class="link-black" href="https://github.com/stricode/backspace/">View on GitHub</a>
-        </div>
-    </div>
-
-    <div class="demo">
-        <div class="container">
-            <div id="editor" contenteditable="true">Type here!</div>
-            <button id="toggleButton" class="btn btn-default btn-black">View Keyboard</button>
-            <p class="note">Note: Custom margins have been applied for this demo on large screens. View on mobile or tablet devices for full-view.</p>
+            <h1>Getting Started</h1>
+            <p>A tutorial for setting up and running BackspaceJS quickly.</p>
         </div>
     </div>
 
     <div class="container">
         <div class="row">
-            <div class="col-md-4">
-                <h2>Simple</h2>
-                <p>Made with plain CSS styling using table display styles and viewport based sizing, the keyboard automatically
-                    adjusts to best view for both mobiles and tablets.</p>
+            <div class="col-md-12">
+                <h2>1. Get the library</h2>
+                <p>Download the production-ready minified library from the GitHub repository (less than ~10KB)</p>
+                <p>
+                    <a href="https://github.com/stricode/backspace/tree/master/lib">https://github.com/stricode/backspace/</a>
+                </p>
+                <p>You can also <a href="https://github.com/stricode/backspace/">download</a> the TypeScript source file if
+                    you want.</p>
 
             </div>
-            <div class="col-md-4">
-                <h2>Light-weight</h2>
-                <p>BackspaceJS has no dependencies. Made with TypeScript and minified using Gulp. The whole library weighs less
-                    than ~10 kilobytes in production.</p>
+            <div class="col-md-12">
+                <h2>2. Include the JS and CSS</h2>
+                <p>Include the JS and CSS files in your app.</p>
+                <br/>
+                <code>
+                    &lt;link rel=&quot;stylesheet&quot; href=&quot;css/backspace.min.css&quot; /&gt;
+                </code>
+                <br/>
+                <code>
+                    &lt;script src=&quot;js/backspace.min.js&quot;&gt;&lt;/script&gt;
+                </code>
             </div>
-            <div class="col-md-4">
-                <h2>Customizable</h2>
-                <p>
-                    You can customize the styling using custom styles in keymap, language and key mappings, fonts, and anything you want with
-                    custom keymaps.
+            <div class="col-md-12">
+                <h2>3. Initialize the Keyboard</h2>
+                <p>(i) Get a reference of your <b>contenteditable</b> div which you want to use as the editor.</p>
+                <code>
+                    var editor = document.getElementById('editor');
+                </code>
+                <br/>
+                <br/>
+                <p>(ii) Declare an array containing values of the <b>lang</b> property of the keymap(s). The <b>english</b>                    language keymap is included in BackspaceJS by default.</p>
+                <code>
+                    var languages = ["english"];
+                </code>
+                <p>The language switching key will appear if the array have more than one item.</p>
+                <br/>
+                <p>(iii) Initialize a <b>Keyboard</b> instance.</p>
+                <code>
+                    var kb = new Keyboard(editor, true, languages);
+                </code>
+                <p>The <b>Keyboard</b> constructor have the following parameters:</p>
+                <ul>
+                    <li><b>editorElement</b>: A contenteditable div object to use as the editor.</li>
+                    <li><b>isContentEditable</b>: Whether the supplied element is contenteditable or not. <b>Must be true.</b>*</li>
+                    <li><b>languageList</b>: An array containing the <b>lang</b> property value of the added keymap(s).</li>
+                </ul>
+                <p class="text-small">Note: BackspaceJS does <b>not yet support input elements.</b> The <b>isContentEditable</b> parameter was
+                    added to support future versions.</p>
+            </div>
+            <div class="col-md-12">
+                <h2>4. Customize</h2>
+                <p>Read the <a href="docs.html">Docs</a> and <a href="api.html">API reference</a> for further instructions on
+                    styling, creating custom keymaps and more.</p>
+                <p>Contributions to the library are also welcome. You can report issues and create pull requests on
+                    <a href="https://github.com/stricode/backspace/">GitHub.</a>
                 </p>
             </div>
         </div>
@@ -100,8 +128,6 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <script src="vendor/backspace-min.js"></script>
-    <script src="scripts/main.js"></script>
 </body>
 
 </html>
