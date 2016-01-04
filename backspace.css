@@ -59,9 +59,21 @@ body {
 
 .kb-other {
     font-size: 2.5vmax;
-    font-family: Roboto;
+    font-family: 'Roboto', Arial, sans-serif;
 }
 
 .kb-hidden {
     animation: slide-down forwards ease-out .3s;
+}
+
+.kb-flip {
+    transform:rotateY(180deg);
+    -webkit-transform:rotateY(180deg);
+    -moz-transform:rotateY(180deg);
+    -o-transform:rotateY(180deg);
+    -ms-transform:rotateY(180deg);
+}
+
+.kb-enter {
+    font-size: 3vmax;
 }

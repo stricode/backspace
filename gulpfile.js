@@ -57,7 +57,7 @@ gulp.task('clean:repo', function () {
         local_repo_path + '*',
         '!' + local_repo_path + '*.md'
     ];
-    return del(patterns, {force: true});
+    return del(patterns, { force: true });
 });
 
 // a) Stage files to master branch (also including minified files in the lib directory)

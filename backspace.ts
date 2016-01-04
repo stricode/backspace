@@ -10,18 +10,19 @@ class Keyboard {
                 uppercase: ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Z', 'X', 'C', 'V', 'B', 'N', 'M'],
                 numbers: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '@', '#', '$', '%', '&', '-', '+', '(', ')', '*', '"', "'", ':', ';', '!', '?']
             },
+            numpadText: ["?123", "ABC"],
+            rowLengths: [10, 9, 7],
             font: "Roboto",
             custom_styles: []
         }
     ];
-    private _baseElement: HTMLElement;
-    private _editorElement: any;
-    private _keyElements: any;
-    private _cmdKeys: any;
     private _keyMap: any;
+    private _editorElement: any;
+    private _baseElement: HTMLElement;
     private _isUpperCase: boolean;
     private _isNumberPad: boolean;
     private _isKeyPressed: boolean;
+    private _addSwitchKey: boolean;
     private _pressedHandle: number;
     private _languageIndex: number;
     private _languages: string[];
@@ -34,28 +35,67 @@ class Keyboard {
         else {
             keys = keymap.keys.numbers;
         }
+        var rows = this._baseElement.querySelectorAll(".kb-row");
         var custom_styles = keymap.custom_styles;
         var font = keymap.font;
         var k = 0, c = 0;
-        for (k = 0; k < keys.length; k++) {
-            var char = keys[c++];
-            var el = (this._keyElements[k] as HTMLElement);
-            if (el.hasAttribute("style")) {
-                el.removeAttribute("style");
-            }
-            if (custom_styles && (custom_styles.length > 0)) {
-                var style = custom_styles.filter(x => x.char == char)[0];
-                for (var prop in style) {
-                    if (prop != "char") {
-                        el.style.setProperty(prop, style[prop]);
+        for (var r = 0; r < 3; r++) {
+            (rows[r] as HTMLElement).innerHTML = null;
+            for (k = 0; k < keymap.rowLengths[r]; k++) {
+                var char = keys[c++];
+                var el = document.createElement("div");
+                el.classList.add("kb-key", "char");
+                if (custom_styles && (custom_styles.length > 0)) {
+                    var style = custom_styles.filter(x => x.char == char)[0];
+                    for (var prop in style) {
+                        if (prop != "char") {
+                            el.style.setProperty(prop, style[prop]);
+                        }
                     }
                 }
+                if (font) {
+                    el.style.fontFamily = font;
+                }
+                el.innerHTML = char;
+                var cb = () => {
+                    rows[r].appendChild(el);
+                }
+                var appended = this._insertCmdKey(k, keymap.rowLengths[r], r, rows, cb);
+                if (!appended) {
+                    cb();
+                }
             }
-            if (font) {
-                el.style.fontFamily = font;
-            }
-            el.innerHTML = char;
         }
+    }
+
+    private _insertCmdKey(k, l, r, rows, cb): boolean {
+        // The first key (left) in the third row.
+        // Adding Shift key
+        if (r == 2 && k == 0) {
+            var shift = document.createElement("div");
+            shift.classList.add("kb-key", "kb-other");
+            shift.innerHTML = "Shift";
+            var attr = document.createAttribute("data-handler");
+            attr.value = "shift";
+            shift.attributes.setNamedItem(attr);
+            rows[r].appendChild(shift);
+            cb(); // appended key after shift
+            return true;
+        }
+        // The last key (right) in the third row.
+        // Adding Backspace key
+        if (r == 2 && k == (l - 1)) {
+            cb(); // appended key before backspace
+            var bksp = document.createElement("div");
+            bksp.classList.add("kb-key", "kb-other", "kb-flip");
+            bksp.innerHTML = "&#8998;";
+            var attr = document.createAttribute("data-handler");
+            attr.value = "backspace";
+            bksp.attributes.setNamedItem(attr);
+            rows[r].appendChild(bksp);
+            return true;
+        }
+        return false;
     }
 
     private _setKeymap(keymap: any, numpad: boolean, uppercase: boolean) {
@@ -63,12 +103,9 @@ class Keyboard {
         this._isNumberPad = numpad;
         this._isUpperCase = uppercase;
         this._keyMap = keymap;
-        for (var k = 0; k < this._cmdKeys.length; k++) {
-            var keyEl = this._cmdKeys[k] as HTMLElement;
-            var binding = keyEl.getAttribute("data-bind").split(":");
-            var getProp = binding[0];
-            var setProp = binding[1];
-            keyEl[setProp] = this._keyMap[getProp];
+        var numpadKey = document.querySelector(".kb-key[data-handler='numpad']") as HTMLElement;
+        if (numpadKey) {
+            numpadKey.innerHTML = this._keyMap.numpadText[this._isNumberPad ? 1 : 0];
         }
     }
 
@@ -112,7 +149,7 @@ class Keyboard {
     private _removeAtCursor() {
         var range = this._getCursor();
         if (this._isElementValid(range.startContainer)) {
-            if (range.collapsed) {
+            if (range.collapsed && range.startOffset > 0) {
                 range.setStart(range.startContainer, range.startOffset - 1);
             }
             range.deleteContents();
@@ -120,7 +157,7 @@ class Keyboard {
         }
     }
 
-    private _handleKey(key: string) {
+    private _handleKey(key: string, source: HTMLElement) {
         switch (key) {
             case "shift":
                 this.SwitchCase();
@@ -199,27 +236,86 @@ class Keyboard {
         }
     }
 
-    private _setPressedInterval(initialTimeout: number, handlerAttr: string) {
+    private _setPressedInterval(initialTimeout: number, handlerAttr: string, element: HTMLElement) {
         var timeout = initialTimeout;
         clearInterval(this._pressedHandle);
         this._pressedHandle = setInterval(() => {
             if (this._isKeyPressed) {
                 timeout = Math.min(Math.abs(timeout - 50), 100);
-                this._handleKey(handlerAttr);
-                this._setPressedInterval(timeout, handlerAttr);
+                this._handleKey(handlerAttr, element);
+                this._setPressedInterval(timeout, handlerAttr, element);
             }
         }, timeout);
+    }
+
+    private _populateLastRow() {
+        var rows = this._baseElement.querySelectorAll(".kb-row");
+        var lr = rows[rows.length - 1];
+        var keysToAdd = [
+            {
+                value: this._keyMap.numpadText[0],
+                handler: "numpad",
+                extraClass: null
+            },
+            {
+                value: ",",
+                handler: null,
+                extraClass: null
+            },
+            {
+                value: "Space",
+                handler: "space",
+                extraClass: "kb-spacebar"
+            },
+            {
+                value: ".",
+                handler: null,
+                extraClass: null
+            }
+        ];
+        var switchKeyObject = {
+            value: "\uD83C\uDF10\uFE0E",
+            handler: "switch",
+            extraClass: null
+        };
+        var enterKeyObject = {
+            value: "\u23CE",
+            handler: "enter",
+            extraClass: "kb-enter"
+        };
+        if (this._addSwitchKey) {
+            keysToAdd.push(switchKeyObject);
+        }
+        keysToAdd.push(enterKeyObject);
+        for (var i = 0; i < keysToAdd.length; i++) {
+            var ko = keysToAdd[i];
+            var ke = document.createElement("div");
+            ke.classList.add("kb-key", "kb-other");
+            if (ko.extraClass) {
+                ke.classList.add(ko.extraClass);
+            }
+            ke.innerText = ko.value;
+            var handler = ko.handler;
+            if (handler) {
+                var attr = document.createAttribute("data-handler");
+                attr.value = handler;
+                ke.attributes.setNamedItem(attr);
+            }
+            lr.appendChild(ke);
+        }
     }
 
     constructor(editorElement: Element, isContentEditable: boolean, languageList: string[]) {
         var baseElement = document.createElement("div");
         baseElement.id = "kb-base";
         baseElement.classList.add("kb-base");
-        baseElement.innerHTML = window.atob(this._elementHTML);
+        for (var r = 0; r < 4; r++) {
+            var rowElement = document.createElement("div");
+            rowElement.classList.add("kb-row");
+            baseElement.appendChild(rowElement);
+        }
         this._editorElement = editorElement;
-        this._keyElements = baseElement.querySelectorAll('.char');
-        this._cmdKeys = baseElement.querySelectorAll('.kb-key[data-bind]');
-        this._setKeymap(Keyboard._keymaps[0], false, false);
+        this._addSwitchKey = (languageList.length > 1);
         this._languages = languageList;
         this._languageIndex = 0;
 
@@ -232,7 +328,7 @@ class Keyboard {
                     var handlerAttr = el.getAttribute("data-handler");
                     if (handlerAttr && handlerAttr == "backspace") {
                         this._isKeyPressed = true;
-                        this._setPressedInterval(300, handlerAttr);
+                        this._setPressedInterval(300, handlerAttr, el);
                     }
                 }
                 else if (ev.type == "touchend" || ev.type == "mouseup") {
@@ -244,7 +340,7 @@ class Keyboard {
                     }
                     var attr = el.getAttribute("data-handler");
                     var args = (attr ? attr : el.innerText);
-                    this._handleKey(args);
+                    this._handleKey(args, el);
                 }
             }
             ev.stopPropagation();
@@ -261,12 +357,12 @@ class Keyboard {
 
         document.body.appendChild(baseElement);
         this._baseElement = baseElement;
+        this._setKeymap(Keyboard._keymaps[0], false, false);
+        this._populateLastRow();
 
         if (isContentEditable) {
             this._editorElement.style.setProperty("white-space", "pre-wrap");
         }
         this._editorElement.focus();
     }
-
-    private _elementHTML = "PGRpdiBjbGFzcz0ia2Itcm93Ij48ZGl2IGNsYXNzPSJrYi1rZXkgY2hhciI+PC9kaXY+PGRpdiBjbGFzcz0ia2Ita2V5IGNoYXIiPjwvZGl2PjxkaXYgY2xhc3M9ImtiLWtleSBjaGFyIj48L2Rpdj48ZGl2IGNsYXNzPSJrYi1rZXkgY2hhciI+PC9kaXY+PGRpdiBjbGFzcz0ia2Ita2V5IGNoYXIiPjwvZGl2PjxkaXYgY2xhc3M9ImtiLWtleSBjaGFyIj48L2Rpdj48ZGl2IGNsYXNzPSJrYi1rZXkgY2hhciI+PC9kaXY+PGRpdiBjbGFzcz0ia2Ita2V5IGNoYXIiPjwvZGl2PjxkaXYgY2xhc3M9ImtiLWtleSBjaGFyIj48L2Rpdj48ZGl2IGNsYXNzPSJrYi1rZXkgY2hhciI+PC9kaXY+PGRpdiBjbGFzcz0ia2Ita2V5IGtiLW90aGVyIiBkYXRhLWhhbmRsZXI9ImJhY2tzcGFjZSI+QmFjazwvZGl2PjwvZGl2PjxkaXYgY2xhc3M9ImtiLXJvdyI+IDxkaXYgY2xhc3M9ImtiLWtleSBjaGFyIj48L2Rpdj48ZGl2IGNsYXNzPSJrYi1rZXkgY2hhciI+PC9kaXY+PGRpdiBjbGFzcz0ia2Ita2V5IGNoYXIiPjwvZGl2PjxkaXYgY2xhc3M9ImtiLWtleSBjaGFyIj48L2Rpdj48ZGl2IGNsYXNzPSJrYi1rZXkgY2hhciI+PC9kaXY+PGRpdiBjbGFzcz0ia2Ita2V5IGNoYXIiPjwvZGl2PjxkaXYgY2xhc3M9ImtiLWtleSBjaGFyIj48L2Rpdj48ZGl2IGNsYXNzPSJrYi1rZXkgY2hhciI+PC9kaXY+PGRpdiBjbGFzcz0ia2Ita2V5IGNoYXIiPjwvZGl2PjxkaXYgY2xhc3M9ImtiLWtleSBrYi1vdGhlciIgZGF0YS1oYW5kbGVyPSJlbnRlciI+RW50ZXI8L2Rpdj48L2Rpdj48ZGl2IGNsYXNzPSJrYi1yb3ciPiA8ZGl2IGNsYXNzPSJrYi1rZXkga2Itb3RoZXIiIGRhdGEtaGFuZGxlcj0ic2hpZnQiPlNoaWZ0PC9kaXY+PGRpdiBjbGFzcz0ia2Ita2V5IGNoYXIiPjwvZGl2PjxkaXYgY2xhc3M9ImtiLWtleSBjaGFyIj48L2Rpdj48ZGl2IGNsYXNzPSJrYi1rZXkgY2hhciI+PC9kaXY+PGRpdiBjbGFzcz0ia2Ita2V5IGNoYXIiPjwvZGl2PjxkaXYgY2xhc3M9ImtiLWtleSBjaGFyIj48L2Rpdj48ZGl2IGNsYXNzPSJrYi1rZXkgY2hhciI+PC9kaXY+PGRpdiBjbGFzcz0ia2Ita2V5IGNoYXIiPjwvZGl2PjwvZGl2PjxkaXYgY2xhc3M9ImtiLXJvdyI+IDxkaXYgY2xhc3M9ImtiLWtleSBrYi1vdGhlciIgZGF0YS1oYW5kbGVyPSJudW1wYWQiPj8xMjM8L2Rpdj48ZGl2IGNsYXNzPSJrYi1rZXkga2Itb3RoZXIiPiw8L2Rpdj48ZGl2IGNsYXNzPSJrYi1rZXkga2Itb3RoZXIga2Itc3BhY2ViYXIiIGRhdGEtaGFuZGxlcj0ic3BhY2UiIGRhdGEtYmluZD0iZGlzcGxheU5hbWU6aW5uZXJUZXh0Ij5TcGFjZTwvZGl2PjxkaXYgY2xhc3M9ImtiLWtleSBrYi1vdGhlciI+LjwvZGl2PjxkaXYgY2xhc3M9ImtiLWtleSBrYi1vdGhlciIgZGF0YS1oYW5kbGVyPSJzd2l0Y2giPlN3aXRjaDwvZGl2PjwvZGl2Pg==";
 }
