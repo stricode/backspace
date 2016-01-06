@@ -209,6 +209,11 @@ class Keyboard {
         this._setKeymap(keymap, false, false);
     }
 
+    public SetKeymap(name: string) {
+        var keymap = Keyboard._keymaps.filter(x => x.name == name)[0];
+        this._setKeymap(keymap, false, false);
+    }
+
     public SwitchLanguage() {
         this._languageIndex++;
         if (this._languageIndex == this._languages.length) {
@@ -219,9 +224,11 @@ class Keyboard {
 
     public Hide() {
         this._baseElement.classList.add("kb-hidden");
+        this._baseElement.classList.remove("kb-shown");
     }
 
     public Show() {
+        this._baseElement.classList.add("kb-shown");
         this._baseElement.classList.remove("kb-hidden");
     }
 
@@ -229,7 +236,8 @@ class Keyboard {
         this._keymaps.push(keymap);
     }
 
-    public static RemoveKeymap(keymap: any) {
+    public static RemoveKeymap(name: string) {
+        var keymap = this._keymaps.filter(x => x.name == name)[0];
         var index = this._keymaps.indexOf(keymap);
         if (index > -1) {
             this._keymaps.splice(index, 1);
@@ -274,12 +282,12 @@ class Keyboard {
             }
         ];
         var switchKeyObject = {
-            value: "\uD83C\uDF10\uFE0E",
+            value: "&#127760;",
             handler: "switch",
             extraClass: null
         };
         var enterKeyObject = {
-            value: "\u23CE",
+            value: "&#9166;",
             handler: "enter",
             extraClass: "kb-enter"
         };
@@ -294,7 +302,7 @@ class Keyboard {
             if (ko.extraClass) {
                 ke.classList.add(ko.extraClass);
             }
-            ke.innerText = ko.value;
+            ke.innerHTML = ko.value;
             var handler = ko.handler;
             if (handler) {
                 var attr = document.createAttribute("data-handler");

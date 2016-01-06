@@ -23,7 +23,6 @@ body {
     width: 100%;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
-    animation: slide-up forwards ease-out .3s;
 }
 
 .kb-row {
@@ -64,6 +63,10 @@ body {
 
 .kb-hidden {
     animation: slide-down forwards ease-out .3s;
+}
+
+.kb-shown {
+    animation: slide-up forwards ease-out .3s;
 }
 
 .kb-flip {

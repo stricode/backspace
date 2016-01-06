@@ -21,5 +21,14 @@
     "gulp-prompt": "^0.1.2",
     "gulp-rename": "^1.2.2",
     "vinyl-paths": "^2.1.0"
-  }
+  },
+  "main": "gulpfile.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stricode/backspace.git"
+  },
+  "bugs": {
+    "url": "https://github.com/stricode/backspace/issues"
+  },
+  "homepage": "https://github.com/stricode/backspace#readme"
 }
