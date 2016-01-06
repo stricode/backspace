@@ -51,6 +51,14 @@ footer  {
     visibility: hidden;
 }
 
+.text-spec {
+    font-size: 20px;
+}
+
+.text-spec span {
+    font-size: 16px;
+}
+
 @media(min-width: 1281px) {
     
 .kb-base {

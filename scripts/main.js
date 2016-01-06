@@ -1,7 +1,6 @@
 var editor = document.getElementById('editor');
 var languages = ["english"];
 var kb = new Keyboard(editor, true, languages);
-kb.Hide();
 
 var isShown = false;
 function toggleKeyboard() {
