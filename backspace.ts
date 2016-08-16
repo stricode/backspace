@@ -17,7 +17,7 @@ class Keyboard {
         }
     ];
     private _keyMap: any;
-    private _editorElement: any;
+    private _editorElement: HTMLElement;
     private _baseElement: HTMLElement;
     private _isUpperCase: boolean;
     private _isNumberPad: boolean;
@@ -313,7 +313,7 @@ class Keyboard {
         }
     }
 
-    constructor(editorElement: Element, isContentEditable: boolean, languageList: string[]) {
+    constructor(editorElement: HTMLElement, isContentEditable: boolean, languageList: string[]) {
         var baseElement = document.createElement("div");
         baseElement.id = "kb-base";
         baseElement.classList.add("kb-base");

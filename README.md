@@ -13,4 +13,4 @@ Backspace.js - A simple, lightweight and customizable keyboard.
 * **Custom Keymaps** - Create your own layout using JSON based **keymap** objects. See the docs for specific details.
 * **CSS based styling inside keymaps** - You can explictly add style rules to specific keys using the **custom_styles** object in your keymaps.
 *  **Custom fonts** - Specify which font to use for keys using **font** property in your keymaps. See docs for more details.
-* **Unicode based character maps** - You can use unicode based character codes to create keymaps for other langauges (or use two at the same time :).
+* **Unicode based character maps** - You can use unicode based character codes to create keymaps for other languages (or use two at the same time :).
