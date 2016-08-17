@@ -172,7 +172,7 @@ class Keyboard {
                 this._insertAtCursor('\n', true, null);
                 break;
             case "space":
-                this._insertAtCursor('\u00a0', true, null);
+                this._insertAtCursor(' ', true, null);
                 break;
             case "backspace":
                 this._removeAtCursor();
