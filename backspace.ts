@@ -73,7 +73,7 @@ class Keyboard {
         // Adding Shift key
         if (r == 2 && k == 0) {
             var shift = document.createElement("div");
-            shift.classList.add("kb-key", "kb-other");
+            shift.classList.add("kb-key", "kb-other", "kb-shift");
             shift.innerHTML = "Shift";
             var attr = document.createAttribute("data-handler");
             attr.value = "shift";
